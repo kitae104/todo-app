@@ -1,10 +1,10 @@
-import logo from './logo.svg';
 import './App.css';
+import LearningComponent from './components/learning/LearningComponent';
 
 function App() {
   return (
-    <div className="App">
-      <h1>React App</h1>
+    <div className="App">      
+      <LearningComponent />
     </div>
   );
 }
