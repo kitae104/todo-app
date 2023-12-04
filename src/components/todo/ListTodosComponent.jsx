@@ -1,17 +1,23 @@
-function ListTodosComponent() {
-  const today = new Date();
-  const targetDate = new Date(today.getFullYear()+12, today.getMonth(), today.getDay());
+import React, { useState } from 'react';
+import { useEffect } from 'react';
+import { retriveAllTodosForUsername } from './api/TodoApiService';
 
-  const todos = [
-    {id:1, description:"Learn React", done:false, targetDate:targetDate},
-    {id:2, description:"Learn Spring", done:false, targetDate:targetDate},
-    {id:3, description:"Learn AWS", done:false, targetDate:targetDate},
-    {id:4, description:"Learn Java", done:false, targetDate:targetDate},
-    {id:5, description:"Learn Python", done:false, targetDate:targetDate},
-    {id:6, description:"Learn C++", done:false, targetDate:targetDate},
-    {id:7, description:"Learn C#", done:false, targetDate:targetDate},
-  ]
+function ListTodosComponent() {
+  const [todos, setTodos] = useState([]);
   
+  useEffect(
+    () => refreshTodos(), []      // [] 한번만 실행
+  )
+
+  function refreshTodos() {
+    retriveAllTodosForUsername('kitae')
+      .then((response) => {
+        setTodos(response.data);
+      })
+      .catch((error) => console.log(error))
+      .finally(() => console.log('cleanup'));
+  }
+
   return(
     <div className="container">
       <h1>할 일 목록(Todo List)</h1>
@@ -33,7 +39,7 @@ function ListTodosComponent() {
                   <td>{todo.id}</td>
                   <td>{todo.description}</td>
                   <td>{todo.done.toString()}</td>
-                  <td>{todo.targetDate.toDateString()}</td>
+                  <td>{todo.targetDate.toString()}</td>
                 </tr>
               )
             )
