@@ -1,6 +1,6 @@
 import { Link, useParams} from 'react-router-dom'; 
 import { useState } from 'react';
-import axios from 'axios'; 
+import { retriveHelloWorldPathVariable } from './api/HelloWorldApiService';
 
 function WelcomeComponent() {
   // useParams() 훅을 사용하여, URL 경로에 포함된 파라미터를 추출한다.
@@ -9,7 +9,9 @@ function WelcomeComponent() {
   const [message, setMessage] = useState(null) // [1]
 
   function callHelloWorldRestApi() {
-    axios.get('http://localhost/hello-world-bean')
+    console.log("called");    
+
+    retriveHelloWorldPathVariable('kitae')
       .then((response) => successfulResponse(response))
       .catch((error) => errorResponse(error))
       .finally(() => console.log('cleanup'));
