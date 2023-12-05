@@ -5,7 +5,7 @@ import { useAuth } from "./security/AuthContext";
 function LoginComponent() {
 
   // 사용자 이름과 패스워드를 상태로 관리한다.
-  const [username, setUsername] = useState("kitae") // 사용자 이름 초기값 설정
+  const [username, setUsername] = useState("") // 사용자 이름 초기값 설정
   const [password, setPassword] = useState("1111")          // 사용자 패스워드 초기값 설정
   const [showErrorMessage, setShowErrorMessage] = useState(false) // 에러 메시지 표시 여부 상태 관리
 
