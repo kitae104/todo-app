@@ -11,9 +11,12 @@ export default function AuthProvider({children}) {
   // 인증 여부 확인 
   const [isAuthenticated, setAuthenticated] = useState(false);
 
+  const [username, setUsername] = useState(null);
+
   function login(username, password) {
     if(username === "kitae" && password === "1111") {
-      setAuthenticated(true);
+      setAuthenticated(true);       // 인증 상태 변경
+      setUsername(username);        // 로그인한 사용자 이름 저장
       return true;
     } else {
       setAuthenticated(false);
@@ -26,7 +29,7 @@ export default function AuthProvider({children}) {
   }
 
   return (
-    <AuthContext.Provider value={{isAuthenticated, login, logout}}> 
+    <AuthContext.Provider value={{isAuthenticated, login, logout, username}}> 
       {children}
     </AuthContext.Provider>
   )
