@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { retriveAllTodoForUsernameApi, deleteTodoApi } from './api/TodoApiService';
+import { useAuth } from './security/AuthContext';
 
 function ListTodosComponent() {
+  
+  const authContext = useAuth(); // useAuth() 훅을 사용하여, AuthContext 객체를 가져온다.
+  const username = authContext.username; // AuthContext 객체에서 사용자 이름을 가져온다.
+
   const [todos, setTodos] = useState([]);
   const [message, setMessage] = useState(null);
   
@@ -11,7 +16,7 @@ function ListTodosComponent() {
   )
 
   function refreshTodos() {
-    retriveAllTodoForUsernameApi('kitae')
+    retriveAllTodoForUsernameApi(username)
       .then((response) => {
         setTodos(response.data);
       })
@@ -20,12 +25,12 @@ function ListTodosComponent() {
   }
 
   const deleteTodo = (id) => {
-    console.log('delete todo' + id);
-    deleteTodoApi('kitae', id)
+    console.log('delete todo ' + id);
+    deleteTodoApi(username, id)
       .then(
         // 1. 메시지 보이기 
         // 2. 목록 갱신 
-        () => {
+        () => {          
           setMessage(`Delete of todo with id = ${id} Successful`);
           refreshTodos();
         }        
