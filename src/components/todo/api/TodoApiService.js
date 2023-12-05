@@ -13,3 +13,6 @@ export const retriveAllTodoForUsernameApi =
 // 해당 유저 이름에 해당하는 todo id에 해당하는 todo를 삭제하기
 export const deleteTodoApi = 
         (username, id) => apiClient.delete(`/users/${username}/todos/${id}`);
+
+export const retriveTodoApi = 
+        (username, id) => apiClient.get(`/users/${username}/todos/${id}`);
