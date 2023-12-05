@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { retriveAllTodoForUsernameApi, deleteTodoApi } from './api/TodoApiService';
 import { useAuth } from './security/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function ListTodosComponent() {
   
   const authContext = useAuth(); // useAuth() 훅을 사용하여, AuthContext 객체를 가져온다.
   const username = authContext.username; // AuthContext 객체에서 사용자 이름을 가져온다.
+
+  const navigate = useNavigate(); // useNavigate() 훅을 사용하여, 네비게이션 객체를 가져온다.
 
   const [todos, setTodos] = useState([]);
   const [message, setMessage] = useState(null);
@@ -39,6 +42,11 @@ function ListTodosComponent() {
       .finally(() => console.log('cleanup'));
   }
 
+  const updateTodo = (id) => {
+    console.log('update todo ' + id);    
+    navigate(`/todo/${id}`);            // TodoComponent로 이동
+  }
+
   return(
     <div className="container">
       <h1>할 일 목록(Todo List)</h1>
@@ -51,6 +59,7 @@ function ListTodosComponent() {
               <th>Is Done?</th>
               <th>TargetDate</th>
               <th>Delete</th>
+              <th>Update</th>
             </tr>
           </thead>
           <tbody>
@@ -63,6 +72,9 @@ function ListTodosComponent() {
                   <td>{todo.targetDate.toString()}</td>
                   <td><button className="btn btn-warning" 
                     onClick={() => deleteTodo(todo.id)}>Delete</button>
+                  </td>
+                  <td><button className="btn btn-success" 
+                    onClick={() => updateTodo(todo.id)}>Update</button>
                   </td>
                 </tr>
               )
