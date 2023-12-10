@@ -1,8 +1,9 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from './security/AuthContext';
-import { retriveTodoApi } from './api/TodoApiService';
+import { retriveTodoApi, updateTodoApi, createTodoApi } from './api/TodoApiService';
 import { useEffect, useState } from 'react';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
+import moment from 'moment';
 
 export default function TodoComponent() {
   const {id} = useParams();               // URL 경로에서 파라미터 값을 가져온다.
@@ -11,40 +12,51 @@ export default function TodoComponent() {
   const [targetDate, setTargetDate] = useState('')    // targetDate 상태값을 정의한다.
 
   const authContext = useAuth();          // useAuth() 훅을 사용하여, AuthContext 객체를 가져온다.
+  const navigate = useNavigate();
+
   const username = authContext.username;  // AuthContext 객체에서 사용자 이름을 가져온다.
 
   useEffect(
     () => retriveTodos(), [id]            // [id] id가 변경될 때마다 실행 
   );
 
-  const formatDate = (dateArray) => {
-    console.log(dateArray);  
-    //const dateArray = dateString.split(',').map(Number);
-    const formattedDate = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
-
-    // Intl.DateTimeFormat을 사용하여 "yyyy-MM-dd" 형식으로 변환
-    const outputDateFormat = new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
-
-    return outputDateFormat.format(formattedDate, "yyyy-MM-dd");
-  };
-
-
-
   function retriveTodos(){
-    retriveTodoApi(username, id)        // id에 해당하는 할 일 목록을 가져온다.
-    .then(response => {
-      setDescription(response.data.description);  // description 상태값을 변경한다.
-      setTargetDate(response.data.targetDate);    // targetDate 상태값을 변경한다.
-    })
-    .catch(error => console.log(error))    
+
+    if(id !== -1){
+      retriveTodoApi(username, id)        // id에 해당하는 할 일 목록을 가져온다.
+      .then(response => {
+        setDescription(response.data.description);  // description 상태값을 변경한다.
+        setTargetDate(response.data.targetDate);    // targetDate 상태값을 변경한다.
+      })
+      .catch(error => console.log(error));    
+    }
+
   }
 
   function onSubmit(values) {
     console.log(values);
+    // todo 객체를 생성한다.
+    const todo = {
+      id: id,
+      username: username,
+      description: values.description,
+      targetDate: values.targetDate,
+      done: false
+    }
+    console.log(todo);
+    if(id === -1) {
+      createTodoApi(username, todo)
+      .then(response => {
+        navigate('/todos');               // 할 일 목록 화면으로 이동한다.
+      })
+      .catch(error => console.log(error));
+    } else {
+      updateTodoApi(username, id, todo)
+      .then(response => {
+        navigate('/todos');               // 할 일 목록 화면으로 이동한다.
+      })    
+      .catch(error => console.log(error));
+    }
   }
 
   function validate(values) { 
@@ -57,7 +69,7 @@ export default function TodoComponent() {
       error.description = 'Enter at least 5 Characters in Description'
     }
 
-    if(values.targetDate.length == null) {
+    if(values.targetDate.length == null || moment(values.targetDate).isValid() || values.targetDate === '') {
       error.targetDate = 'Enter a target date'
     }
 
