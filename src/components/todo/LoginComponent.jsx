@@ -25,9 +25,9 @@ function LoginComponent() {
     setPassword(event.target.value);
   }
 
-  // 로그인 버튼을 클릭하면, handleSubmit을 호출하여 결과 확인. 
-  const handleSubmit = () => {
-    if(authContext.login(username, password)) {           
+  // 로그인 버튼을 눌른 후 로그인 응답이 올 때까지 기다렸다고 이동함  
+  async function handleSubmit() { 
+    if(await authContext.login(username, password)) {           
       navigate(`/welcome/${username}`);   // URL 경로에 파라미터를 포함하여 이동
     } else {
       setShowErrorMessage(true);
