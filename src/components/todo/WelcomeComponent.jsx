@@ -1,6 +1,7 @@
 import { Link, useParams} from 'react-router-dom'; 
 import { useState } from 'react';
 import { retriveHelloWorldPathVariable } from './api/HelloWorldApiService';
+import { useAuth } from './security/AuthContext';
 
 function WelcomeComponent() {
   // useParams() 훅을 사용하여, URL 경로에 포함된 파라미터를 추출한다.
@@ -8,10 +9,12 @@ function WelcomeComponent() {
 
   const [message, setMessage] = useState(null) // [1]
 
+  const authContext = useAuth();
+
   function callHelloWorldRestApi() {
     console.log("called");    
 
-    retriveHelloWorldPathVariable('kitae')
+    retriveHelloWorldPathVariable('abc@test.com', authContext.token)
       .then((response) => successfulResponse(response))
       .catch((error) => errorResponse(error))
       .finally(() => console.log('cleanup'));
