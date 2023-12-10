@@ -47,6 +47,10 @@ function ListTodosComponent() {
     navigate(`/todo/${id}`);            // TodoComponent로 이동
   }
 
+  const addNewTodo = () => {
+    navigate(`/todo/-1`);               // TodoComponent로 이동
+  }
+
   const formatDate = (dateString) => {
     const dateArray = dateString.split(',').map(Number);
     const formattedDate = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
@@ -98,6 +102,8 @@ function ListTodosComponent() {
           </tbody>
         </table>
       </div>
+      <div className="btn btn-success m-5"
+        onClick={() => addNewTodo()}>Add New Todo</div>
     </div>
   );
 }
