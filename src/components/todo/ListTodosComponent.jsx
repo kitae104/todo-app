@@ -49,21 +49,7 @@ function ListTodosComponent() {
 
   const addNewTodo = () => {
     navigate(`/todo/-1`);               // TodoComponent로 이동
-  }
-
-  const formatDate = (dateString) => {
-    const dateArray = dateString.split(',').map(Number);
-    const formattedDate = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
-
-    // Intl.DateTimeFormat을 사용하여 "yyyy-MM-dd" 형식으로 변환
-    const outputDateFormat = new Intl.DateTimeFormat('en-US', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-    });
-
-    return outputDateFormat.format(formattedDate);
-  };
+  }  
 
   return(
     <div className="container">
