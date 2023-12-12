@@ -6,7 +6,7 @@ import { ErrorMessage, Field, Form, Formik } from 'formik';
 import moment from 'moment';
 
 export default function TodoComponent() {
-  const {id} = useParams();               // URL 경로에서 파라미터 값을 가져온다.
+  const { id } = useParams();               // URL 경로에서 파라미터 값을 가져온다.
 
   const [description, setDescription] = useState('')  // description 상태값을 정의한다.
   const [targetDate, setTargetDate] = useState('')    // targetDate 상태값을 정의한다.
@@ -17,12 +17,13 @@ export default function TodoComponent() {
   const username = authContext.username;  // AuthContext 객체에서 사용자 이름을 가져온다.
 
   useEffect(
-    () => retriveTodos(), [id]            // [id] id가 변경될 때마다 실행 
+    () => retriveTodos(), 
+    [id]            // [id] id가 변경될 때마다 실행 
   );
 
   function retriveTodos(){
 
-    if(id !== -1){
+    if(id != -1){
       retriveTodoApi(username, id)        // id에 해당하는 할 일 목록을 가져온다.
       .then(response => {
         setDescription(response.data.description);  // description 상태값을 변경한다.
@@ -30,11 +31,11 @@ export default function TodoComponent() {
       })
       .catch(error => console.log(error));    
     }
-
   }
 
   function onSubmit(values) {
     console.log(values);
+
     // todo 객체를 생성한다.
     const todo = {
       id: id,
@@ -43,8 +44,10 @@ export default function TodoComponent() {
       targetDate: values.targetDate,
       done: false
     }
+
     console.log(todo);
-    if(id === -1) {
+    
+    if(id == -1) {
       createTodoApi(username, todo)
       .then(response => {
         navigate('/todos');               // 할 일 목록 화면으로 이동한다.
@@ -60,21 +63,21 @@ export default function TodoComponent() {
   }
 
   function validate(values) { 
-    let error = {
+    let errors = {
       //description: 'Enter a valid description',
       //targetDate: 'Enter a valid target date'
     }
 
     if(values.description.length < 5) {
-      error.description = 'Enter at least 5 Characters in Description'
+      errors.description = '최소 5글자 이상 입력하세요.'
     }
 
-    if(values.targetDate.length == null || moment(values.targetDate).isValid() || values.targetDate === '') {
-      error.targetDate = 'Enter a target date'
+    if(values.targetDate == null || values.targetDate=='' || !moment(values.targetDate).isValid()) {
+      errors.targetDate = '목표 날짜를 입력하세요.';
     }
 
     console.log(values);
-    return error;
+    return errors;
   }
 
   return (
